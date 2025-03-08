@@ -48,7 +48,7 @@ class _RestaurantNearYouState extends State<RestaurantNearYou> {
 
           /// 🛠 Fix Overflow: Wrap in SizedBox with a fixed height
           SizedBox(
-            height: 230, // Increased height slightly to prevent clipping
+            height: 250, // Increased height slightly to prevent clipping
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(

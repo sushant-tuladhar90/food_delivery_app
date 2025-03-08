@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_ordering_app/pages/foods_details.dart';
 
 class CategoryDetails extends StatefulWidget {
   final String categoryName; // Receive category name
@@ -79,7 +80,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 0.75,
+            childAspectRatio: 0.85,
           ),
           itemBuilder: (context, index) {
             return _buildFoodCard(filteredItems[index]);
@@ -90,61 +91,82 @@ class _CategoryDetailsState extends State<CategoryDetails> {
   }
 
   Widget _buildFoodCard(Map<String, dynamic> foodItem) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                foodItem["image"],
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              foodItem["title"],
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              foodItem["description"],
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.orange, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      "${foodItem["rating"]}",
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Text(
-                  "Rs. ${foodItem["price"]}",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => FoodsDetails(
+                    image: foodItem["image"], // ✅ Corrected
+                    name: foodItem["title"], // ✅ Corrected
+                    rating:
+                        foodItem["rating"].toDouble(), // ✅ Ensure it's double
+                    price: foodItem["price"].toDouble(), // ✅ Ensure it's double
+                    description: foodItem["description"], // ✅ Corrected
                   ),
-                ),
-              ],
             ),
-          ],
+          ),
+
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  foodItem["image"],
+                  height: 100,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                foodItem["title"],
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                foodItem["description"],
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.orange, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${foodItem["rating"]}",
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Rs. ${foodItem["price"]}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

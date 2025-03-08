@@ -41,7 +41,7 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(widget.image),
+                      image: AssetImage(widget.image), // Displaying the image
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -186,72 +186,83 @@ class _FoodsDetailsState extends State<FoodsDetails> {
       ),
 
       // Sticky Bottom Navigation Bar (Fixed)
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        elevation: 5,
-        child: SizedBox(
-          height: 70, // ✅ Fixed height to prevent overflow
+      bottomNavigationBar: SafeArea(
+        child: BottomAppBar(
+          color: Colors.white,
+          elevation: 5,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 04.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Total Price
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Price",
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    Text(
-                      "Rs. ${(widget.price * quantity).toStringAsFixed(2)}",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Add to Cart Button
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Add item to cart and navigate to CartPage
-                      setState(() {
-                        cartItems.add({
-                          'image': widget.image,
-                          'name': widget.name,
-                          'price': widget.price,
-                          'quantity': quantity,
-                        });
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CartPage(cartItems: cartItems),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical:
+                  MediaQuery.of(context).size.height * 0.001, // Dynamic padding
+            ),
+            child: IntrinsicHeight(
+              // Adapts to content size
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // ✅ Expanded to prevent layout breaking
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Total Price",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Add to Cart",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                        Text(
+                          "Rs. ${(widget.price * quantity).toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+
+                  // ✅ Flexible Button to prevent overflow
+                  Flexible(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: EdgeInsets.symmetric(
+                          horizontal:
+                              MediaQuery.of(context).size.width *
+                              0.08, // Adjust width dynamically
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          cartItems.add({
+                            'image': widget.image,
+                            'name': widget.name,
+                            'price': widget.price,
+                            'quantity': quantity,
+                          });
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CartPage(cartItems: cartItems),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Add to Cart",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

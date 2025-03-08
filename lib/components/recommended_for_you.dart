@@ -81,7 +81,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
 
           /// 🛠 Wrap in SizedBox to prevent overflow
           SizedBox(
-            height: 230,
+            height: 250,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(
