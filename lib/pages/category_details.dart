@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_ordering_app/pages/foods_details.dart';
+import 'package:food_ordering_app/pages/foods/foods_details.dart';
 
 class CategoryDetails extends StatefulWidget {
   final String categoryName; // Receive category name

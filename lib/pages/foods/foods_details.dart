@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'cart_page.dart'; // Import the CartPage
+import '../cart_page.dart'; // Import the CartPage
 
 class FoodsDetails extends StatefulWidget {
   final String image;

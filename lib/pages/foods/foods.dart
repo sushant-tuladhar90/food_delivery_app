@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_ordering_app/pages/foods_details.dart';
+import 'package:food_ordering_app/pages/foods/foods_details.dart';
 
 class Foods extends StatefulWidget {
   const Foods({super.key});
@@ -13,7 +13,8 @@ class _FoodsState extends State<Foods> {
     {
       "image": "assets/images/food.webp",
       "title": "Burger On Plate",
-      "description": "Make this grilling season...",
+      "description":
+          "Lorem jenbufenf efinb eifnhuebnrfv fwhv uehvu wfdnv8uebrfv efnvu8bef vun efnv8usebfnv eifhnbv8 uesfbhv efivbn8e ufbhv",
       "rating": 4.5,
       "price": 500,
     },

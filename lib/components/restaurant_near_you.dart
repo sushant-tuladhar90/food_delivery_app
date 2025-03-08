@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_ordering_app/pages/restaurants.dart';
+import 'package:food_ordering_app/pages/restaurants/hotel_details.dart';
+import 'package:food_ordering_app/pages/restaurants/restaurants.dart';
 
 class RestaurantNearYou extends StatefulWidget {
   const RestaurantNearYou({super.key});
@@ -63,7 +64,7 @@ class _RestaurantNearYouState extends State<RestaurantNearYou> {
   }
 
   Widget _buildRestaurantCard(int index) {
-    List<Map<String, dynamic>> foodItems = [
+    List<Map<String, dynamic>> hotelItems = [
       {
         "image": "assets/images/hotel.webp",
         "hotel": "Big Hotel",
@@ -84,90 +85,115 @@ class _RestaurantNearYouState extends State<RestaurantNearYou> {
       },
     ];
 
+    final hotel = hotelItems[index];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: SizedBox(
-          // 🛠 Fixed height for Card to prevent overflow
-          width: 200,
-          height: 230, // Fixed card height
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image with favorite icon
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        foodItems[index]["image"],
-                        height: 120, // Reduced image height
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+      child: GestureDetector(
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => HotelsDetails(
+                      image:
+                          hotel["image"] ??
+                          "assets/images/hotel.webp", // Default image
+                      hotel: hotel["hotel"] ?? "Unknown Hotel",
+                      address: hotel["address"] ?? "No Address Available",
+                      rating:
+                          hotel["rating"]?.toDouble() ??
+                          0.0, // Convert to double safely
                     ),
-                    Positioned(
-                      top: 10,
-                      right: 10,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            favoriteStatus[index] = !favoriteStatus[index];
-                          });
-                        },
-                        child: Icon(
-                          favoriteStatus[index]
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color:
-                              favoriteStatus[index] ? Colors.red : Colors.white,
-                          size: 28,
+              ),
+            ),
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SizedBox(
+            // 🛠 Fixed height for Card to prevent overflow
+            width: 200,
+            height: 230, // Fixed card height
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image with favorite icon
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          hotelItems[index]["image"],
+                          height: 120, // Reduced image height
+                          width: double.infinity,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-
-                // Title
-                Text(
-                  foodItems[index]["hotel"],
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  maxLines: 1, // Limit to 1 line to prevent overflow
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 5),
-
-                // Subtitle
-                Text(
-                  foodItems[index]["city"],
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
-                  maxLines: 1, // Limit description to prevent overflow
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 8),
-
-                // Rating and Price Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Colors.orange, size: 18),
-                        SizedBox(width: 5),
-                        Text(
-                          "${foodItems[index]["rating"]}",
-                          style: TextStyle(fontSize: 14),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              favoriteStatus[index] = !favoriteStatus[index];
+                            });
+                          },
+                          child: Icon(
+                            favoriteStatus[index]
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color:
+                                favoriteStatus[index]
+                                    ? Colors.red
+                                    : Colors.white,
+                            size: 28,
+                          ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+
+                  // Title
+                  Text(
+                    hotelItems[index]["hotel"],
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1, // Limit to 1 line to prevent overflow
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 5),
+
+                  // Subtitle
+                  Text(
+                    hotelItems[index]["city"],
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                    maxLines: 1, // Limit description to prevent overflow
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+
+                  // Rating and Price Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.orange, size: 18),
+                          SizedBox(width: 5),
+                          Text(
+                            "${hotelItems[index]["rating"]}",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

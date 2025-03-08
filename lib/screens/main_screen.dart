@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/components/category.dart';
+import 'package:food_ordering_app/components/product_ordered.dart';
 import 'package:food_ordering_app/components/recommended_for_you.dart';
 import 'package:food_ordering_app/components/restaurant_near_you.dart';
 import 'package:food_ordering_app/components/scrollable_image.dart';
@@ -12,19 +13,19 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.green,
+        // backgroundColor: Colors.green,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20),
+              // SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
-                  ),
+                  // borderRadius: BorderRadius.only(
+                  //   bottomLeft: Radius.circular(30.0),
+                  //   bottomRight: Radius.circular(30.0),
+                  // ),
                 ),
                 child: Column(
                   children: [
@@ -70,7 +71,9 @@ class MainScreen extends StatelessWidget {
                     RecommendedForYou(),
                     SizedBox(height: 5),
                     RestaurantNearYou(),
-                    SizedBox(height: 80), // Space for bottom nav bar
+                    SizedBox(height: 5), // Space for bottom nav bar
+                    ProductOrdered(),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),

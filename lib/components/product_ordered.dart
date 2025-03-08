@@ -1,38 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/pages/foods/foods.dart';
-import 'package:food_ordering_app/pages/foods/foods_details.dart';
 
-class RecommendedForYou extends StatefulWidget {
-  const RecommendedForYou({super.key});
+class ProductOrdered extends StatefulWidget {
+  const ProductOrdered({super.key});
 
   @override
-  State<RecommendedForYou> createState() => _RecommendedForYouState();
+  State<ProductOrdered> createState() => _ProductOrderedState();
 }
 
-class _RecommendedForYouState extends State<RecommendedForYou> {
+class _ProductOrderedState extends State<ProductOrdered> {
   // List of food items
   final List<Map<String, dynamic>> foodItems = [
     {
       "image": "assets/images/food.webp",
       "title": "Burger On Plate",
-      "description":
-          "lorem wjidnbve efbvjneifvun aefibvnje ufvn  aiefnv uefnv feijnv eufvhbn aiefnv 8efnbv lorem wjidnbve efbvjneifvun aefibvnje ufvn  aiefnv uefnv feijnv eufvhbn aiefnv 8efnbv lorem wjidnbve efbvjneifvun aefibvnje ufvn  aiefnv uefnv feijnv eufvhbn aiefnv 8efnbv ",
-      "rating": 4.5,
-      "price": 500.0, // Make sure price is double
+      "description": "Make this grilling season...",
     },
     {
       "image": "assets/images/food1.webp",
       "title": "Pizza Delight",
       "description": "Cheesy and delicious...",
-      "rating": 4.7,
-      "price": 700.0, // Make sure price is double
     },
     {
       "image": "assets/images/food2.webp",
       "title": "Pasta Special",
       "description": "Creamy and full of flavor...",
-      "rating": 4.6,
-      "price": 600.0, // Make sure price is double
     },
   ];
 
@@ -57,7 +49,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Recommended For You",
+                  "Product Ordered",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 GestureDetector(
@@ -100,20 +92,18 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
     final food = foodItems[index];
 
     return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => FoodsDetails(
-                    image: food["image"],
-                    name: food["title"],
-                    rating: food["rating"],
-                    price: food["price"],
-                    description: food["description"],
-                  ),
-            ),
-          ),
+      onTap: () {},
+      // () => Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder:
+      //         (context) => FoodsDetails(
+      //           image: food["image"],
+      //           name: food["title"],
+      //           description: food["description"],
+      //         ),
+      //   ),
+      // ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Card(
@@ -184,28 +174,28 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                   SizedBox(height: 8),
 
                   // Rating and Price Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.orange, size: 18),
-                          SizedBox(width: 5),
-                          Text(
-                            "${food["rating"]}",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Rs. ${food["price"]}",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Row(
+                  //       children: [
+                  //         Icon(Icons.star, color: Colors.orange, size: 18),
+                  //         SizedBox(width: 5),
+                  //         Text(
+                  //           "${food["rating"]}",
+                  //           style: TextStyle(fontSize: 14),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     Text(
+                  //       "Rs. ${food["price"]}",
+                  //       style: TextStyle(
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
