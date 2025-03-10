@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _screens = [
     MainScreen(),
     const FavoritePage(),
-    const CartPage(cartItems: []),
+    CartPage(),
     const Profile(),
   ];
 
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
       body: _screens[_selectedIndex], // Display selected screen
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex, // Pass the current index here
-        onItemTapped: _onItemTapped,  // Pass the onItemTapped function
+        onItemTapped: _onItemTapped, // Pass the onItemTapped function
       ),
     );
   }

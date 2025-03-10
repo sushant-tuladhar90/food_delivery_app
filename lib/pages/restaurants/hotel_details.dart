@@ -192,13 +192,13 @@ class _HotelsDetailsState extends State<HotelsDetails> {
                             'nights': nights,
                           });
                         });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => CartPage(cartItems: cartItems),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (context) => CartPage(cartItems: cartItems),
+                        //   ),
+                        // );
                       },
                       child: Text(
                         "Book Now",

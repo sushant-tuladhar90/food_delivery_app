@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/pages/review_page.dart';
-import '../cart_page.dart'; // Import the CartPage
-
-// A global variable to store cart items across the app
-// Note: In a production app, this would be better handled with proper state management
-List<Map<String, dynamic>> globalCartItems = [];
+// Import the CartPage
 
 class FoodsDetails extends StatefulWidget {
   final String image;
@@ -12,6 +8,8 @@ class FoodsDetails extends StatefulWidget {
   final double rating;
   final double price;
   final String description;
+  final List<Map<String, dynamic>>
+  initialCartItems; // New parameter for initial cart items
 
   const FoodsDetails({
     super.key,
@@ -20,6 +18,7 @@ class FoodsDetails extends StatefulWidget {
     required this.rating,
     required this.price,
     required this.description,
+    this.initialCartItems = const [], // Default empty list if not provided
   });
 
   @override
@@ -30,6 +29,14 @@ class _FoodsDetailsState extends State<FoodsDetails> {
   int quantity = 1;
   String selectedSize = 'Medium';
   bool isFavorite = false;
+  late List<Map<String, dynamic>> cartItems; // List to store cart items
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize cart with items passed from constructor or empty list
+    cartItems = List.from(widget.initialCartItems);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +59,10 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                 ),
                 _buildIconButton(
                   Icons.arrow_back,
-                  () => Navigator.pop(context),
+                  () => Navigator.pop(
+                    context,
+                    cartItems,
+                  ), // Return cart items when going back
                   top: 20,
                   left: 10,
                 ),
@@ -67,59 +77,6 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                   right: 60,
                 ),
                 _buildIconButton(Icons.share, () {}, top: 20, right: 10),
-
-                // Cart icon with badge showing number of items
-                if (globalCartItems.isNotEmpty)
-                  Positioned(
-                    top: 20,
-                    right: 110,
-                    child: Stack(
-                      children: [
-                        _buildIconButton(
-                          Icons.shopping_cart,
-                          () {
-                            // Navigate to cart page and handle returned cart items
-                            Navigator.push<List<Map<String, dynamic>>>(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        CartPage(cartItems: globalCartItems),
-                              ),
-                            ).then((returnedItems) {
-                              if (returnedItems != null) {
-                                setState(() {
-                                  // Update global cart
-                                  globalCartItems = returnedItems;
-                                });
-                              }
-                            });
-                          },
-                          top: 0,
-                          right: 0,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${globalCartItems.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
 
@@ -339,8 +296,8 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         int existingIndex = -1;
 
                         // Check if the item already exists in the cart
-                        for (int i = 0; i < globalCartItems.length; i++) {
-                          if (globalCartItems[i]['name'] == widget.name) {
+                        for (int i = 0; i < cartItems.length; i++) {
+                          if (cartItems[i]['name'] == widget.name) {
                             itemExists = true;
                             existingIndex = i;
                             break;
@@ -350,11 +307,10 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         setState(() {
                           if (itemExists) {
                             // Update quantity if item already exists
-                            globalCartItems[existingIndex]['quantity'] +=
-                                quantity;
+                            cartItems[existingIndex]['quantity'] += quantity;
                           } else {
                             // Add new item if it doesn't exist
-                            globalCartItems.add({
+                            cartItems.add({
                               'image': widget.image,
                               'name': widget.name,
                               'price': widget.price,
@@ -366,21 +322,19 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         });
 
                         // Navigate to cart page and handle returned cart items
-                        Navigator.push<List<Map<String, dynamic>>>(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    CartPage(cartItems: globalCartItems),
-                          ),
-                        ).then((returnedItems) {
-                          if (returnedItems != null) {
-                            setState(() {
-                              // Update global cart
-                              globalCartItems = returnedItems;
-                            });
-                          }
-                        });
+                        // Navigator.push<List<Map<String, dynamic>>>(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (context) => CartPage(cartItems: cartItems),
+                        //   ),
+                        // ).then((returnedItems) {
+                        //   if (returnedItems != null) {
+                        //     setState(() {
+                        //       cartItems = returnedItems;
+                        //     });
+                        //   }
+                        // });
                       },
                       child: const Text(
                         "Add to Cart",
