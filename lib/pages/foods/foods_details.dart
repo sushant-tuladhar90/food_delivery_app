@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_ordering_app/pages/review_page.dart';
 import '../cart_page.dart'; // Import the CartPage
+
+// A global variable to store cart items across the app
+// Note: In a production app, this would be better handled with proper state management
+List<Map<String, dynamic>> globalCartItems = [];
 
 class FoodsDetails extends StatefulWidget {
   final String image;
@@ -25,7 +30,6 @@ class _FoodsDetailsState extends State<FoodsDetails> {
   int quantity = 1;
   String selectedSize = 'Medium';
   bool isFavorite = false;
-  List<Map<String, dynamic>> cartItems = []; // List to store cart items
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,59 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                   right: 60,
                 ),
                 _buildIconButton(Icons.share, () {}, top: 20, right: 10),
+
+                // Cart icon with badge showing number of items
+                if (globalCartItems.isNotEmpty)
+                  Positioned(
+                    top: 20,
+                    right: 110,
+                    child: Stack(
+                      children: [
+                        _buildIconButton(
+                          Icons.shopping_cart,
+                          () {
+                            // Navigate to cart page and handle returned cart items
+                            Navigator.push<List<Map<String, dynamic>>>(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        CartPage(cartItems: globalCartItems),
+                              ),
+                            ).then((returnedItems) {
+                              if (returnedItems != null) {
+                                setState(() {
+                                  // Update global cart
+                                  globalCartItems = returnedItems;
+                                });
+                              }
+                            });
+                          },
+                          top: 0,
+                          right: 0,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${globalCartItems.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
 
@@ -79,24 +136,28 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                       children: [
                         Text(
                           widget.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Row(
                           children: [
-                            Icon(Icons.star, color: Colors.orange, size: 18),
-                            SizedBox(width: 4),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 4),
                             Text(
                               widget.rating.toString(),
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
 
                     // Price and Quantity
                     Row(
@@ -104,7 +165,7 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                       children: [
                         Text(
                           'Rs. ${widget.price}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -112,7 +173,7 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove_circle_outline),
+                              icon: const Icon(Icons.remove_circle_outline),
                               onPressed:
                                   quantity > 1
                                       ? () {
@@ -122,9 +183,12 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                                       }
                                       : null,
                             ),
-                            Text('$quantity', style: TextStyle(fontSize: 16)),
+                            Text(
+                              '$quantity',
+                              style: const TextStyle(fontSize: 16),
+                            ),
                             IconButton(
-                              icon: Icon(Icons.add_circle_outline),
+                              icon: const Icon(Icons.add_circle_outline),
                               onPressed: () {
                                 setState(() {
                                   quantity++;
@@ -135,20 +199,20 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
                     // Description
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Description",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           widget.description,
                           style: TextStyle(
@@ -158,24 +222,56 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                    // Select Size
-                    Text(
-                      "Select Size",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
+                    // Reviews Section
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildSizeOption("Small"),
-                        _buildSizeOption("Medium"),
-                        _buildSizeOption("Large"),
+                        const Text(
+                          "Reviews",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ReviewPage(),
+                                ),
+                              ),
+                          child: const Text(
+                            "View All",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    _buildReview(
+                      "John Doe",
+                      "2025-03-08",
+                      4.5,
+                      "The food was delicious and well prepared!",
+                    ),
+                    _buildReview(
+                      "Alice Smith",
+                      "2025-03-07",
+                      5.0,
+                      "Amazing taste, great presentation! Will order again.",
+                    ),
+                    _buildReview(
+                      "Michael Brown",
+                      "2025-03-06",
+                      4.0,
+                      "Good portion size, but could be a bit spicier.",
                     ),
                   ],
                 ),
@@ -184,7 +280,6 @@ class _FoodsDetailsState extends State<FoodsDetails> {
           ],
         ),
       ),
-
       // Sticky Bottom Navigation Bar (Fixed)
       bottomNavigationBar: SafeArea(
         child: BottomAppBar(
@@ -207,13 +302,13 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Total Price",
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                         Text(
                           "Rs. ${(widget.price * quantity).toStringAsFixed(2)}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.green,
@@ -239,23 +334,55 @@ class _FoodsDetailsState extends State<FoodsDetails> {
                         ),
                       ),
                       onPressed: () {
+                        // Add the current item to cart
+                        bool itemExists = false;
+                        int existingIndex = -1;
+
+                        // Check if the item already exists in the cart
+                        for (int i = 0; i < globalCartItems.length; i++) {
+                          if (globalCartItems[i]['name'] == widget.name) {
+                            itemExists = true;
+                            existingIndex = i;
+                            break;
+                          }
+                        }
+
                         setState(() {
-                          cartItems.add({
-                            'image': widget.image,
-                            'name': widget.name,
-                            'price': widget.price,
-                            'quantity': quantity,
-                          });
+                          if (itemExists) {
+                            // Update quantity if item already exists
+                            globalCartItems[existingIndex]['quantity'] +=
+                                quantity;
+                          } else {
+                            // Add new item if it doesn't exist
+                            globalCartItems.add({
+                              'image': widget.image,
+                              'name': widget.name,
+                              'price': widget.price,
+                              'quantity': quantity,
+                              'description': widget.description,
+                              'rating': widget.rating,
+                            });
+                          }
                         });
-                        Navigator.push(
+
+                        // Navigate to cart page and handle returned cart items
+                        Navigator.push<List<Map<String, dynamic>>>(
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => CartPage(cartItems: cartItems),
+                                (context) =>
+                                    CartPage(cartItems: globalCartItems),
                           ),
-                        );
+                        ).then((returnedItems) {
+                          if (returnedItems != null) {
+                            setState(() {
+                              // Update global cart
+                              globalCartItems = returnedItems;
+                            });
+                          }
+                        });
                       },
-                      child: Text(
+                      child: const Text(
                         "Add to Cart",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
@@ -269,59 +396,86 @@ class _FoodsDetailsState extends State<FoodsDetails> {
       ),
     );
   }
+}
 
-  // Function to build a size option
-  Widget _buildSizeOption(String size) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedSize = size;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: selectedSize == size ? Colors.green : Colors.grey[300],
-          borderRadius: BorderRadius.circular(10),
+Widget _buildReview(String name, String date, double rating, String comment) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 8.0),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 5,
+          spreadRadius: 1,
+          offset: const Offset(0, 3),
         ),
-        child: Text(
-          size,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: selectedSize == size ? Colors.white : Colors.black,
-          ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Name and Rating
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                const Icon(Icons.star, color: Colors.orange, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  "$rating",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Text(date, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        const SizedBox(height: 8),
+        Text(
+          comment,
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildIconButton(
+  IconData icon,
+  VoidCallback onPressed, {
+  double top = 0,
+  double left = 0,
+  double right = 0,
+}) {
+  return Positioned(
+    top: top,
+    left: left > 0 ? left : null,
+    right: right > 0 ? right : null,
+    child: Container(
+      height: 45,
+      width: 45,
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: IconButton(
+          icon: Icon(icon, color: Colors.white),
+          onPressed: onPressed,
         ),
       ),
-    );
-  }
-
-  // Function to build an icon button with background
-  Widget _buildIconButton(
-    IconData icon,
-    VoidCallback onPressed, {
-    double top = 0,
-    double left = 0,
-    double right = 0,
-  }) {
-    return Positioned(
-      top: top,
-      left: left > 0 ? left : null,
-      right: right > 0 ? right : null,
-      child: Container(
-        height: 45,
-        width: 45,
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: IconButton(
-            icon: Icon(icon, color: Colors.white),
-            onPressed: onPressed,
-          ),
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
